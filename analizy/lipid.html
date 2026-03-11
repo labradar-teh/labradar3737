@@ -1,0 +1,325 @@
+
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Липидный профиль — LabRadar</title>
+  <meta name="description" content="Липидный профиль помогает оценить риски атеросклероза по показателям холестерина и фракций. Сравнение цен по лабораториям и городам." />
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="../favicon-32.png" sizes="32x32">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <style>
+    .crumbs{color:var(--muted); font-size:13px; margin:0 0 10px}
+    .crumbs a{color:inherit; text-decoration:none}
+    .crumbs a:hover{text-decoration:underline}
+    .two{display:grid; grid-template-columns: 1.2fr .8fr; gap:12px}
+    .panel{border:1px solid var(--line); border-radius:18px; padding:14px; background:#fff}
+    .panel h3{margin:0 0 10px; font-size:16px; letter-spacing:-.3px}
+    .list{margin:0; padding-left:18px; line-height:1.9; color:var(--text)}
+    .smallp{margin:0; color:var(--muted); line-height:1.55}
+    @media (max-width:860px){.two{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <div class="hbar">
+      <a class="brand" href="../index.html" aria-label="LabRadar">
+        <img src="../logo.svg" alt="" width="34" height="34" />
+        <span>LabRadar</span>
+      </a>
+      <a class="pill" href="../analizy.html" style="text-decoration:none">
+        <span class="dot" aria-hidden="true"></span>
+        <span>Каталог</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container" style="max-width:920px">
+    <div class="crumbs">
+      <a href="../index.html">Главная</a> · <a href="../analizy.html">Каталог анализов</a> · Биохимия · Липидный профиль
+    </div>
+
+    <h1 style="margin:0 0 10px; letter-spacing:-1px">Липидный профиль</h1>
+    <p class="sub" style="margin:0 0 16px">Липидный профиль помогает оценить риски атеросклероза по показателям холестерина и фракций.</p>
+
+    <div class="two">
+      <div class="panel">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap">
+  <h3 style="margin:0">Сравнение цен</h3>
+  <button class="pill" id="addToCart" type="button" style="padding:8px 10px; font-weight:900">+ В корзину</button>
+</div>
+        <p class="smallp" style="margin-bottom:12px">Город: <select id="cityInline" class="select" style="padding:8px 10px; border-radius:12px"></select></p>
+        <div id="kpis" class="kpis" style="margin:0 0 12px"></div>
+        <table class="table" aria-label="Цены по лабораториям">
+          <thead>
+            <tr><th>Лаборатория</th><th>Цена</th><th>Адрес</th></tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+        <div class="small" style="margin-top:10px">
+          <a class="link" id="openSearch" href="#">Открыть в поиске</a>
+            <button class="btn-ghost" id="shareBtn" type="button">Поделиться</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Подготовка</h3>
+        <ul class="list">
+          <li>Если назначил врач — следуйте его рекомендациям.</li>
+          <li>Часто анализы сдают утром; можно пить воду.</li>
+          <li>Точные правила зависят от исследования и метода.</li>
+        </ul>
+
+        <h3 style="margin-top:14px">Когда назначают</h3>
+        <ul class="list">
+          <li>При профилактическом обследовании.</li>
+          <li>При жалобах и симптомах по назначению врача.</li>
+        </ul>
+
+        <h3 style="margin-top:14px">Важно</h3>
+        <p class="smallp">Информация на странице носит справочный характер и не заменяет консультацию специалиста.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-title">LabRadar</div>
+        <div>Описание анализа и сравнение цен.</div>
+      </div>
+      <div>
+        <div class="footer-title">Правовая информация</div>
+        <div><a href="../privacy.html">Политика конфиденциальности</a> · <a href="../terms.html">Пользовательское соглашение</a></div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../app.js"></script>
+<script>
+(async function(){
+  const data = await LabRadar.loadData();
+  const testId = "lipid";
+  
+  let city = LabRadar.store.getCity() || ((data.cities||[])[0] || "");
+  if(!LabRadar.store.getCity() && city) LabRadar.store.setCity(city);
+
+
+
+const cityInline = document.getElementById("cityInline");
+const openSearch = document.getElementById("openSearch");
+const kpis = document.getElementById("kpis");
+const tbody = document.getElementById("tbody");
+
+function setCityUI(){
+  if(!cityInline) return;
+  cityInline.innerHTML = (data.cities||[]).map(c=>`<option value="${LabRadar.escapeHtml(c)}">${LabRadar.escapeHtml(c)}</option>`).join("");
+  if(city) cityInline.value = city;
+}
+
+function renderPrices(){
+  // build rows for current city
+  const rows = city ? LabRadar.buildRows(data, city, testId) : [];
+  const stats = LabRadar.computeStats(rows);
+  if(kpis) kpis.innerHTML = `
+    <div class="kpi"><div class="label">Самая низкая цена</div><div class="value">${LabRadar.formatRUB(stats.min)}</div></div>
+    <div class="kpi"><div class="label">Средняя цена</div><div class="value">${LabRadar.formatRUB(stats.avg)}</div></div>
+    <div class="kpi"><div class="label">Разница</div><div class="value">${stats.min!=null && stats.max!=null ? LabRadar.formatRUB(stats.max - stats.min) : "—"}</div></div>
+  `;
+
+  const minPrice = stats.min;
+  if(tbody) tbody.innerHTML = rows.length ? rows
+    .sort((a,b)=>(a.price??1e18)-(b.price??1e18))
+    .map(r => {
+      const addr = (r.locations && r.locations[0]) ? r.locations[0].address : "—";
+      const badge = (minPrice!=null && r.price===minPrice) ? ' <span class="badge">самая низкая</span>' : '';
+      return `
+        <tr>
+          <td><div style="font-weight:900">${LabRadar.escapeHtml(r.labName)}</div></td>
+          <td class="price">${LabRadar.formatRUB(r.price)}${badge}</td>
+          <td class="small">${LabRadar.escapeHtml(addr)}</td>
+        </tr>
+      `;
+    }).join("")
+    : `<tr><td colspan="3" class="small">По этому анализу пока нет данных в выбранном городе.</td></tr>`;
+
+  if(openSearch) openSearch.href = `../search.html?city=${encodeURIComponent(city)}&test=${encodeURIComponent(testId)}&q=${encodeURIComponent("")}`;
+}
+
+setCityUI();
+renderPrices();
+
+if(cityInline){
+  cityInline.addEventListener("change", ()=>{
+    const selected = cityInline.value;
+    if(!selected) return;
+    city = selected;
+    LabRadar.store.setCity(city);
+    renderPrices();
+  });
+}
+
+
+  // --- Cart behaviour ---
+  const addBtn = document.getElementById("addToCart");
+  function refreshAddBtn(){
+    const inCart = LabRadar.cart.has(testId);
+    addBtn.textContent = inCart ? "✓ В корзине" : "+ В корзину";
+  }
+  addBtn.addEventListener("click", ()=>{
+    if(LabRadar.cart.has(testId)) LabRadar.cart.remove(testId);
+    else LabRadar.cart.add(testId);
+    refreshAddBtn();
+    refreshCartBar();
+  });
+
+  const cartBar = document.getElementById("cartBar");
+  const cartCount = document.getElementById("cartCount");
+  const cartOpen = document.getElementById("cartOpen");
+  const cartClear = document.getElementById("cartClear");
+
+  const cartModal = document.getElementById("cartModal");
+  const closeCartModal = document.getElementById("closeCartModal");
+  const cartCity = document.getElementById("cartCity");
+  const cartTests = document.getElementById("cartTests");
+  const cartTbody = document.getElementById("cartTbody");
+
+  function refreshCartBar(){
+    const cnt = LabRadar.cart.count();
+    cartCount.textContent = cnt;
+    cartBar.style.display = cnt ? "block" : "none";
+  }
+
+  function openCartModal(){
+    const ids = LabRadar.cart.get();
+    cartCity.textContent = city || "—";
+    // names
+    const nameById = Object.fromEntries((data.tests||[]).map(t=>[t.id,t.name]));
+    cartTests.textContent = ids.map(id=>nameById[id]||id).join(", ") || "—";
+
+    // compute totals by lab
+    const labsById = Object.fromEntries((data.labs||[]).map(l=>[l.id,l]));
+    const totals = [];
+    for(const lab of (data.labs||[])){
+      let sum = 0;
+      let have = 0;
+      for(const tid of ids){
+        const pmap = (((data.prices||{})[city]||{})[tid]) || {};
+        const price = pmap[lab.id];
+        if(typeof price === "number"){ sum += price; have++; }
+      }
+      if(have){ totals.push({labId:lab.id, labName:lab.name, sum, have}); }
+    }
+    totals.sort((a,b)=>a.sum-b.sum);
+
+    cartTbody.innerHTML = totals.length ? totals.map((t,i)=>`
+      <tr>
+        <td><div style="font-weight:900">${LabRadar.escapeHtml(t.labName)}</div></td>
+        <td class="price">${LabRadar.formatRUB(t.sum)} ${i===0 ? '<span class="badge">самая низкая</span>' : ''}</td>
+        <td class="small">${t.have} / ${ids.length}</td>
+      </tr>
+    `).join("") : `<tr><td colspan="3" class="small">Нет данных по ценам для выбранных анализов.</td></tr>`;
+
+    cartModal.classList.add("show");
+  }
+
+  function closeCart(){ cartModal.classList.remove("show"); }
+
+  cartOpen.addEventListener("click", openCartModal);
+  cartClear.addEventListener("click", ()=>{ LabRadar.cart.clear(); refreshAddBtn(); refreshCartBar(); });
+  closeCartModal.addEventListener("click", closeCart);
+  cartModal.addEventListener("click", (e)=>{ if(e.target===cartModal) closeCart(); });
+
+  window.addEventListener("labradar:cart", ()=>{ refreshAddBtn(); refreshCartBar(); });
+  refreshAddBtn();
+  refreshCartBar();
+
+
+  // Share (copy link)
+  const shareBtn = document.getElementById("shareBtn");
+  const toast = document.getElementById("toast");
+  const toastTitle = document.getElementById("toastTitle");
+  const toastText = document.getElementById("toastText");
+  const toastClose = document.getElementById("toastClose");
+  function showToast(title, text){
+    if(!toast) return;
+    toastTitle.textContent = title;
+    toastText.textContent = text;
+    toast.style.display = "block";
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(()=>toast.style.display="none", 3000);
+  }
+  if(toastClose) toastClose.addEventListener("click", ()=> toast.style.display="none");
+  async function copyLink(){
+    const url = window.location.href;
+    try{ await navigator.clipboard.writeText(url); }
+    catch(e){
+      const ta=document.createElement("textarea"); ta.value=url;
+      document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta);
+    }
+    showToast("✓ Ссылка на анализ скопирована", "Отправьте пациенту или родственникам");
+  }
+  if(shareBtn) shareBtn.addEventListener("click", copyLink);
+
+})();
+</script>
+
+<!-- Cart bar -->
+<div id="cartBar" style="position:fixed; left:0; right:0; bottom:12px; z-index:30; display:none;">
+  <div class="container" style="max-width:920px">
+    <div class="card" style="width:100%; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 14px">
+      <div style="display:flex; flex-direction:column; gap:2px">
+        <div style="font-weight:900">Корзина: <span id="cartCount">0</span> анализ(ов)</div>
+        <div class="small">Посчитаем сумму в каждой лаборатории в выбранном городе.</div>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center">
+        <button class="btn-ghost" id="cartClear" type="button" style="flex:0">Очистить</button>
+        <button class="btn-solid" id="cartOpen" type="button" style="flex:0">Сравнить суммы</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Cart modal -->
+<div class="backdrop" id="cartModal" role="dialog" aria-modal="true" aria-label="Сравнение сумм">
+  <div class="modal" style="width:min(720px,100%)">
+    <div class="modal-head">
+      <div class="modal-title">Сумма по лабораториям</div>
+      <button class="icon-btn" id="closeCartModal" aria-label="Закрыть">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="small" style="margin:0 0 10px">Город: <b id="cartCity">—</b> · Анализы: <b id="cartTests">—</b></p>
+      <div class="card" style="width:100%; box-shadow:none; padding:0; border-radius:16px">
+        <table class="table" aria-label="Сумма по лабораториям">
+          <thead><tr><th>Лаборатория</th><th>Сумма</th><th>Позиции</th></tr></thead>
+          <tbody id="cartTbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="toast" style="position:fixed; left:50%; transform:translateX(-50%); bottom:18px; z-index:60; display:none;">
+  <div class="card" style="padding:12px 14px; border-radius:16px; width:min(520px, calc(100vw - 28px)); box-shadow:0 18px 40px rgba(11,31,30,.16)">
+    <div style="display:flex; gap:10px; align-items:flex-start">
+      <div style="flex:0; width:10px; height:10px; border-radius:999px; background:var(--brand); margin-top:6px"></div>
+      <div style="flex:1">
+        <div style="font-weight:900" id="toastTitle">✓ Ссылка скопирована</div>
+        <div class="small" id="toastText">Можно отправить пациенту</div>
+      </div>
+      <button class="icon-btn" id="toastClose" aria-label="Закрыть" style="margin-top:-2px">✕</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

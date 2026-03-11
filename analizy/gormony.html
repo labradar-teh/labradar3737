@@ -1,0 +1,103 @@
+
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Гормоны — анализы и цены | LabRadar</title>
+  <meta name="description" content="Категория: Гормоны. Список анализов, описание и сравнение цен по лабораториям." />
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="../favicon-32.png" sizes="32x32">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <style>
+    .grid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px}
+    .item{display:block; text-decoration:none; border:1px solid var(--line); border-radius:16px; padding:12px 12px; background:#fff}
+    .item:hover{border-color:rgba(43,165,158,.35); box-shadow:0 10px 24px rgba(11,31,30,.08)}
+    .item-title{font-weight:900; letter-spacing:-.3px}
+    .item-sub{margin-top:4px; color:var(--muted); font-size:13px; line-height:1.45}
+    @media (max-width:720px){ .grid{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <div class="hbar">
+      <a class="brand" href="../index.html" aria-label="LabRadar">
+        <img src="../logo.svg" alt="" width="34" height="34" />
+        <span>LabRadar</span>
+      </a>
+      <a class="pill" href="../analizy.html" style="text-decoration:none">
+        <span class="dot" aria-hidden="true"></span>
+        <span>Каталог</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container" style="max-width:920px">
+    <div style="color:var(--muted); font-size:13px; margin:0 0 10px">
+      <a href="../index.html" style="text-decoration:none; color:inherit">Главная</a> ·
+      <a href="../analizy.html" style="text-decoration:none; color:inherit">Каталог</a> · Гормоны
+    </div>
+    <h1 style="margin:0 0 10px; letter-spacing:-1px">Гормоны</h1>
+    <p class="sub" style="margin:0 0 16px">Выберите анализ, чтобы открыть детальную страницу и сравнить цены в вашем городе.</p>
+    <div class="grid">
+      <a class="item" href="tsh.html"><div class="item-title">ТТГ (тиреотропный гормон)</div><div class="item-sub">Анализ ТТГ помогает оценить работу щитовидной железы и гормональный баланс.</div></a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-title">LabRadar</div>
+        <div>Категории анализов и сравнение цен.</div>
+      </div>
+      <div>
+        <div class="footer-title">Правовая информация</div>
+        <div><a href="../privacy.html">Политика конфиденциальности</a> · <a href="../terms.html">Пользовательское соглашение</a></div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Cart bar -->
+<div id="cartBar" style="position:fixed; left:0; right:0; bottom:12px; z-index:30; display:none;">
+  <div class="container" style="max-width:920px">
+    <div class="card" style="width:100%; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 14px">
+      <div style="display:flex; flex-direction:column; gap:2px">
+        <div style="font-weight:900">Корзина: <span id="cartCount">0</span> анализ(ов)</div>
+        <div class="small">Посчитаем сумму в каждой лаборатории в выбранном городе.</div>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center">
+        <button class="btn-ghost" id="cartClear" type="button" style="flex:0">Очистить</button>
+        <button class="btn-solid" id="cartOpen" type="button" style="flex:0">Сравнить суммы</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Cart modal -->
+<div class="backdrop" id="cartModal" role="dialog" aria-modal="true" aria-label="Сравнение сумм">
+  <div class="modal" style="width:min(720px,100%)">
+    <div class="modal-head">
+      <div class="modal-title">Сумма по лабораториям</div>
+      <button class="icon-btn" id="closeCartModal" aria-label="Закрыть">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="small" style="margin:0 0 10px">Город: <b id="cartCity">—</b> · Анализы: <b id="cartTests">—</b></p>
+      <div class="card" style="width:100%; box-shadow:none; padding:0; border-radius:16px">
+        <table class="table" aria-label="Сумма по лабораториям">
+          <thead><tr><th>Лаборатория</th><th>Сумма</th><th>Позиции</th></tr></thead>
+          <tbody id="cartTbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

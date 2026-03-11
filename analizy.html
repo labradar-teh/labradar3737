@@ -1,0 +1,227 @@
+
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Каталог анализов — LabRadar</title>
+  <meta name="description" content="Каталог анализов LabRadar: гормоны, витамины, биохимия и другие популярные исследования." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="favicon-32.png" sizes="32x32">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <style>
+    .toolbar{display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap; margin:10px 0 16px}
+    .searchbox{flex:1; min-width:240px; display:flex; align-items:center; gap:10px; padding:12px 12px; border:1px solid rgba(11,31,30,.14); border-radius:14px; background:#fff}
+    .searchbox input{border:0; outline:none; width:100%; font-size:15px; background:transparent}
+    .chips{display:flex; flex-wrap:wrap; gap:8px}
+    .chip{border:1px solid var(--line); background:#fff; padding:8px 10px; border-radius:999px; cursor:pointer; font-weight:800; font-size:13px}
+    .chip.active{border-color:rgba(43,165,158,.45); box-shadow:0 0 0 6px rgba(43,165,158,.10)}
+    .section{margin:18px 0}
+    .section-head{display:flex; align-items:flex-end; justify-content:space-between; gap:10px; margin:0 4px 10px}
+    .section-left{display:flex; flex-direction:column; gap:2px}
+    .section-kicker{color:var(--muted); font-size:12px; font-weight:800; letter-spacing:.12em; text-transform:uppercase}
+    .section-head h2{margin:0; font-size:20px; letter-spacing:-.6px}
+    .divider{height:1px; background:var(--line); margin:10px 4px 12px}
+    .section-link{color:var(--brand); text-decoration:none; font-weight:900; font-size:13px}
+    .section-link:hover{text-decoration:underline}
+    .grid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px}
+    .item{display:block; text-decoration:none; border:1px solid var(--line); border-radius:16px; padding:12px 12px; background:#fff}
+    .item:hover{border-color:rgba(43,165,158,.35); box-shadow:0 10px 24px rgba(11,31,30,.08)}
+    .item-title{font-weight:900; letter-spacing:-.3px}
+    .item-sub{margin-top:4px; color:var(--muted); font-size:13px; line-height:1.45}
+    @media (max-width:720px){ .grid{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <div class="hbar">
+      <a class="brand" href="index.html" aria-label="LabRadar">
+        <img src="logo.svg" alt="" width="34" height="34" />
+        <span>LabRadar</span>
+      </a>
+      <a class="pill" href="index.html" style="text-decoration:none">
+        <span class="dot" aria-hidden="true"></span>
+        <span>К поиску</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container" style="max-width:920px">
+    <h1 style="margin:0 0 10px; letter-spacing:-1px">Каталог анализов</h1>
+    <p class="sub" style="margin:0 0 16px">Найдите нужный анализ и откройте детальную страницу: описание, подготовка и сравнение цен.</p>
+
+    <div class="toolbar">
+      <div class="searchbox" aria-label="Поиск по каталогу">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="currentColor" d="M10 18a8 8 0 1 1 0-16a8 8 0 0 1 0 16m11 3l-6-6" opacity=".85"/>
+        </svg>
+        <input id="catq" type="search" placeholder="Поиск по каталогу (например: ТТГ, витамин D)" autocomplete="off">
+      </div>
+      <div class="chips" id="chips"></div>
+    </div>
+
+    <div id="empty" class="card" style="width:100%; display:none">
+      <div class="small">Ничего не найдено. Попробуйте изменить запрос.</div>
+    </div>
+
+    <div id="sections">
+
+    <section class="section" id="obshchie-analizy" data-section="Общие анализы">
+      <div class="section-head">
+        <div class="section-left">
+          <div class="section-kicker">Категория</div>
+          <h2>Общие анализы</h2>
+        </div>
+        <a class="section-link" href="analizy/obshchie-analizy.html">Страница категории</a>
+      </div>
+      <div class="divider"></div>
+      <div class="grid">
+        <a class="item" href="analizy/cbc.html" data-name="Клинический анализ крови (ОАК)" data-cat="Общие анализы">
+          <div class="item-title">Клинический анализ крови (ОАК)</div>
+          <div class="item-sub">Общий анализ крови помогает оценить общее состояние организма и выявить признаки воспаления, анемии и других состояний.</div>
+        </a>
+      </div>
+    </section>
+
+
+    <section class="section" id="gormony" data-section="Гормоны">
+      <div class="section-head">
+        <div class="section-left">
+          <div class="section-kicker">Категория</div>
+          <h2>Гормоны</h2>
+        </div>
+        <a class="section-link" href="analizy/gormony.html">Страница категории</a>
+      </div>
+      <div class="divider"></div>
+      <div class="grid">
+        <a class="item" href="analizy/tsh.html" data-name="ТТГ (тиреотропный гормон)" data-cat="Гормоны">
+          <div class="item-title">ТТГ (тиреотропный гормон)</div>
+          <div class="item-sub">Анализ ТТГ помогает оценить работу щитовидной железы и гормональный баланс.</div>
+        </a>
+      </div>
+    </section>
+
+
+    <section class="section" id="vitaminy" data-section="Витамины">
+      <div class="section-head">
+        <div class="section-left">
+          <div class="section-kicker">Категория</div>
+          <h2>Витамины</h2>
+        </div>
+        <a class="section-link" href="analizy/vitaminy.html">Страница категории</a>
+      </div>
+      <div class="divider"></div>
+      <div class="grid">
+        <a class="item" href="analizy/vitd.html" data-name="Витамин D (25(OH)D)" data-cat="Витамины">
+          <div class="item-title">Витамин D (25(OH)D)</div>
+          <div class="item-sub">Витамин D (25(OH)D) показывает обеспеченность витамином D и помогает оценить риск дефицита.</div>
+        </a>
+      </div>
+    </section>
+
+
+    <section class="section" id="biohimiya" data-section="Биохимия">
+      <div class="section-head">
+        <div class="section-left">
+          <div class="section-kicker">Категория</div>
+          <h2>Биохимия</h2>
+        </div>
+        <a class="section-link" href="analizy/biohimiya.html">Страница категории</a>
+      </div>
+      <div class="divider"></div>
+      <div class="grid">
+        <a class="item" href="analizy/glucose.html" data-name="Глюкоза в плазме" data-cat="Биохимия">
+          <div class="item-title">Глюкоза в плазме</div>
+          <div class="item-sub">Глюкоза в плазме — базовый показатель углеводного обмена.</div>
+        </a>
+<a class="item" href="analizy/lipid.html" data-name="Липидный профиль" data-cat="Биохимия">
+          <div class="item-title">Липидный профиль</div>
+          <div class="item-sub">Липидный профиль помогает оценить риски атеросклероза по показателям холестерина и фракций.</div>
+        </a>
+<a class="item" href="analizy/ferritin.html" data-name="Ферритин" data-cat="Биохимия">
+          <div class="item-title">Ферритин</div>
+          <div class="item-sub">Ферритин отражает запасы железа в организме и помогает оценить риск железодефицита.</div>
+        </a>
+      </div>
+    </section>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    
+    <div class="footer-inner" style="gap:14px">
+      <div style="display:flex; flex-direction:column; gap:6px">
+        <a href="index.html" class="pill" style="text-decoration:none; width:max-content">
+          <span class="dot" aria-hidden="true"></span>
+          <span>К поиску</span>
+        </a>
+        <div class="small">Написать нам в Telegram: <a class="link" href="https://t.me/labradar" target="_blank" rel="noreferrer">@labradar</a></div>
+      </div>
+      <div class="small" style="text-align:right">
+        <a class="link" href="legal.html">Правовая информация</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+<script>
+(function(){
+  const categories = ["Общие анализы", "Гормоны", "Витамины", "Биохимия"];
+  const chips = document.getElementById("chips");
+  const q = document.getElementById("catq");
+  const empty = document.getElementById("empty");
+
+  let activeCat = "Все";
+
+  function renderChips(){
+    const all = ["Все", ...categories];
+    chips.innerHTML = all.map(c => `<button class="chip ${c===activeCat?'active':''}" type="button" data-cat="${c}">${c}</button>`).join("");
+  }
+
+  function applyFilter(){
+    const v = (q.value||"").trim().toLowerCase().replace(/ё/g,"е");
+    const items = [...document.querySelectorAll(".item")];
+    let shown = 0;
+
+    items.forEach(el => {
+      const name = (el.dataset.name||"").toLowerCase().replace(/ё/g,"е");
+      const cat = el.dataset.cat || "";
+      const okCat = (activeCat==="Все") ? true : (cat===activeCat);
+      const okText = !v || name.includes(v);
+      const ok = okCat && okText;
+      el.style.display = ok ? "block" : "none";
+      if(ok) shown++;
+    });
+
+    document.querySelectorAll(".section").forEach(sec => {
+      const anyVisible = [...sec.querySelectorAll(".item")].some(i => i.style.display !== "none");
+      sec.style.display = anyVisible ? "block" : "none";
+    });
+
+    empty.style.display = shown ? "none" : "block";
+  }
+
+  chips.addEventListener("click", (e)=>{
+    const btn = e.target.closest(".chip");
+    if(!btn) return;
+    activeCat = btn.dataset.cat;
+    renderChips();
+    applyFilter();
+  });
+
+  q.addEventListener("input", applyFilter);
+
+  renderChips();
+  applyFilter();
+})();
+</script>
+</body>
+</html>

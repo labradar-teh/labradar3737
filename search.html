@@ -1,0 +1,241 @@
+
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LabRadar — результаты поиска</title>
+  <meta name="robots" content="noindex" />
+  <link rel="stylesheet" href="styles.css" />
+
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="favicon-32.png" sizes="32x32">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+</head>
+<body>
+<header>
+  <div class="container">
+    <div class="hbar">
+      <a class="brand" href="index.html" aria-label="LabRadar">
+        <img src="logo.svg" alt="" width="34" height="34" />
+        <span>LabRadar</span>
+      </a>
+
+      <button class="pill" id="cityPill" type="button">
+        <span class="dot" aria-hidden="true"></span>
+        <span id="cityLabel">Город: —</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <div class="controls">
+      <div>
+        <div style="font-weight:900; font-size:22px; letter-spacing:-.6px" id="title">Результаты</div>
+        <div class="small" id="subtitle"></div>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+        <div style="position:relative">
+          
+<button class="pill" id="shareBtn" type="button" style="padding:10px 12px; display:flex; align-items:center; gap:8px; font-weight:900" aria-label="Поделиться">
+  <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18 16a3 3 0 0 0-2.24 1.03L8.91 13.7a3.05 3.05 0 0 0 0-3.39l6.85-3.33A3 3 0 1 0 15 5a3 3 0 0 0 .05.52L8.2 8.85a3 3 0 1 0 0 6.3l6.85 3.33A3 3 0 1 0 18 16z"/></svg>
+  <span>Поделиться</span>
+</button>
+<div id="sharePopover" style="display:none; position:absolute; right:0; top:42px; background:#fff; border:1px solid rgba(11,31,30,.12); border-radius:14px; box-shadow:0 14px 32px rgba(11,31,30,.14); padding:8px; min-width:190px; z-index:20">
+  <button class="btn-ghost" id="shareCopy" style="width:100%; text-align:left; border-radius:12px; padding:10px 10px">Скопировать ссылку</button>
+  <button class="btn-ghost" id="shareQR" style="width:100%; text-align:left; border-radius:12px; padding:10px 10px">QR‑код</button>
+</div>
+
+        </div>
+        
+        <select class="select" id="cityInline" aria-label="Город"></select>
+        
+        <a class="link" href="index.html">Новый поиск</a>
+      </div>
+    </div>
+
+    <div class="kpis" id="kpis"></div>
+
+    <div class="small" style="margin:4px 0 10px; color:#6b7280">Сравнение цен · можно поделиться</div>
+<div id="bestPrice" class="card" style="width:100%; margin-bottom:12px">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap">
+        <div>
+          <div class="small">Лучшая цена</div>
+          <div style="font-weight:900; font-size:18px" id="bestPriceTitle">—</div>
+        </div>
+        <div class="price" style="font-size:20px" id="bestPriceValue">—</div>
+      </div>
+    </div>
+
+    <div class="card" style="width:100%">
+      <div class="small" id="updated"></div>
+      <table class="table" aria-label="Сравнение цен">
+        <thead>
+          <tr>
+            <th>Лаборатория</th>
+            <th>Цена</th>
+            <th>Адрес</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+
+      <div style="margin-top:16px">
+        <div style="font-weight:900; letter-spacing:-.4px; margin:6px 0 8px">Динамика цен</div>
+        <div class="small" style="margin-bottom:10px">Показываем изменение цен за последние 12 месяцев (демо-данные).</div>
+        <canvas id="chart" width="1000" height="280" style="width:100%; height:auto; border:1px solid var(--line); border-radius:16px; background:#fff"></canvas>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-title">Контакты</div>
+        <div>Email: <a href="mailto:hello@labradar.ru">hello@labradar.ru</a></div>
+      </div>
+      <div>
+        <div class="footer-title">Правовая информация</div>
+        <div><a href="privacy.html">Политика конфиденциальности</a> · <a href="terms.html">Пользовательское соглашение</a></div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- City modal (reused) -->
+<div class="backdrop" id="cityModal" role="dialog" aria-modal="true" aria-label="Выбор города">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">Выбор города</div>
+      <button class="icon-btn" id="closeCityModal" aria-label="Закрыть">✕</button>
+    </div>
+    <div class="modal-body">
+      <p id="geoText">Выберите город для сравнения цен.</p>
+      <select class="select" id="citySelect"></select>
+      <div class="modal-actions">
+        <button class="btn-ghost" id="cancelCity" type="button">Отмена</button>
+        <button class="btn-solid" id="saveCity" type="button">Применить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js">
+// Share popover
+const shareBtn=document.getElementById("shareBtn");
+const sharePopover=document.getElementById("sharePopover");
+const shareCopy=document.getElementById("shareCopy");
+const shareTG=document.getElementById("shareTG");
+
+shareBtn.addEventListener("click",()=>{
+  sharePopover.style.display=sharePopover.style.display==="block"?"none":"block";
+});
+
+document.addEventListener("click",(e)=>{
+  if(!shareBtn.contains(e.target) && !sharePopover.contains(e.target)){
+    sharePopover.style.display="none";
+  }
+});
+
+shareCopy.addEventListener("click",async ()=>{
+  const url=window.location.href;
+  try{
+    await navigator.clipboard.writeText(url);
+    shareCopy.textContent="✓ Скопировано";
+    setTimeout(()=>shareCopy.textContent="Скопировать ссылку",1200);
+  }catch(e){
+    const ta=document.createElement("textarea");
+    ta.value=url;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+  }
+});
+
+shareTG.addEventListener("click",()=>{
+  const url=encodeURIComponent(window.location.href);
+  window.open("https://t.me/share/url?url="+url,"_blank");
+});
+
+
+
+// QR modal
+const qrBtn = document.getElementById("qrBtn");
+const qrModal = document.getElementById("qrModal");
+const closeQrModal = document.getElementById("closeQrModal");
+const qrImg = document.getElementById("qrImg");
+const qrCopy = document.getElementById("qrCopy");
+
+function openQr(){
+  const url = window.location.href;
+  // Use a lightweight public QR endpoint
+  const qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" + encodeURIComponent(url);
+  qrImg.src = qrUrl;
+  qrModal.classList.add("show");
+}
+function closeQr(){ qrModal.classList.remove("show"); }
+
+qrBtn.addEventListener("click", openQr);
+closeQrModal.addEventListener("click", closeQr);
+qrModal.addEventListener("click", (e)=>{ if(e.target===qrModal) closeQr(); });
+
+qrCopy.addEventListener("click", async ()=>{
+  const url = window.location.href;
+  try{
+    await navigator.clipboard.writeText(url);
+    qrCopy.textContent = "✓ Скопировано";
+    setTimeout(()=>qrCopy.textContent="Скопировать ссылку", 1200);
+  }catch(e){
+    const ta = document.createElement("textarea");
+    ta.value = url; document.body.appendChild(ta);
+    ta.select(); document.execCommand("copy");
+    document.body.removeChild(ta);
+  }
+});
+
+</script>
+
+
+<!-- QR modal -->
+<div class="backdrop" id="qrModal" role="dialog" aria-modal="true" aria-label="QR-код ссылки">
+  <div class="modal" style="width:min(420px,100%)">
+    <div class="modal-head">
+      <div class="modal-title">QR‑код результата</div>
+      <button class="icon-btn" id="closeQrModal" aria-label="Закрыть">✕</button>
+    </div>
+    <div class="modal-body" style="text-align:center">
+      <img id="qrImg" alt="QR" width="220" height="220" style="border:1px solid var(--line); border-radius:16px; background:#fff" />
+      <div id="qrText" class="small" style="margin-top:10px; word-break:break-all; padding:10px 12px; border:1px solid var(--line); border-radius:14px; background:rgba(11,31,30,.02); text-align:left">—</div>
+
+      <div class="small" style="margin-top:10px">Откройте на телефоне / отправьте пациенту</div>
+      <div style="margin-top:14px; display:flex; gap:10px; justify-content:center">
+        <button class="btn-solid" id="qrCopy" type="button">Скопировать ссылку</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="toast" style="position:fixed; left:50%; transform:translateX(-50%); bottom:18px; z-index:60; display:none;">
+  <div class="card" style="padding:12px 14px; border-radius:16px; width:min(520px, calc(100vw - 28px)); box-shadow:0 18px 40px rgba(11,31,30,.16)">
+    <div style="display:flex; gap:10px; align-items:flex-start">
+      <div style="flex:0; width:10px; height:10px; border-radius:999px; background:var(--brand); margin-top:6px"></div>
+      <div style="flex:1">
+        <div style="font-weight:900" id="toastTitle">✓ Ссылка скопирована</div>
+        <div class="small" id="toastText">Отправьте её пациенту или родственникам</div>
+      </div>
+      <button class="icon-btn" id="toastClose" aria-label="Закрыть" style="margin-top:-2px">✕</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
