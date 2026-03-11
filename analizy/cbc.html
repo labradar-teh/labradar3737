@@ -106,7 +106,6 @@
 (async function(){
   const data = await LabRadar.loadData();
   const testId = "cbc";
-
   let city = LabRadar.store.getCity() || ((data.cities||[])[0] || "");
   if(!LabRadar.store.getCity() && city) LabRadar.store.setCity(city);
 
@@ -124,7 +123,6 @@
   function renderPrices(){
     const rows = city ? LabRadar.buildRows(data, city, testId) : [];
     const stats = LabRadar.computeStats(rows);
-
     if(kpis) kpis.innerHTML = `
       <div class="kpi"><div class="label">Самая низкая цена</div><div class="value">${LabRadar.formatRUB(stats.min)}</div></div>
       <div class="kpi"><div class="label">Средняя цена</div><div class="value">${LabRadar.formatRUB(stats.avg)}</div></div>
@@ -178,9 +176,7 @@
     }
   }
   if(shareBtn) shareBtn.addEventListener("click", copyCurrentUrl);
-
 })();
 </script>
-
 </body>
 </html>
