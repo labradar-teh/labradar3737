@@ -1,74 +1,68 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Биохимия — анализы и цены | LabRadar</title>
-<meta name="description" content="Биохимические анализы крови. Сравните цены в лабораториях вашего города.">
-<link rel="stylesheet" href="../styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Биохимия — анализы и цены | LabRadar</title>
+  <meta name="description" content="Категория: Биохимия. Список анализов, описание и сравнение цен по лабораториям." />
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="../favicon-32.png" sizes="32x32">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <style>
+    .grid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px}
+    .item{display:block; text-decoration:none; border:1px solid var(--line); border-radius:16px; padding:12px 12px; background:#fff}
+    .item:hover{border-color:rgba(43,165,158,.35); box-shadow:0 10px 24px rgba(11,31,30,.08)}
+    .item-title{font-weight:900; letter-spacing:-.3px}
+    .item-sub{margin-top:4px; color:var(--muted); font-size:13px; line-height:1.45}
+    @media (max-width:720px){ .grid{grid-template-columns:1fr} }
+  </style>
 </head>
-
 <body>
-
 <header>
-<div class="container">
-<div class="hbar">
-
-<a class="brand" href="../index.html">
-<img src="../logo.svg" width="34">
-<span>LabRadar</span>
-</a>
-
-<a class="pill" href="../analizy.html">
-<span class="dot"></span>
-<span>Каталог</span>
-</a>
-
-</div>
-</div>
+  <div class="container">
+    <div class="hbar">
+      <a class="brand" href="../index.html" aria-label="LabRadar">
+        <img src="../logo.svg" alt="" width="34" height="34" />
+        <span>LabRadar</span>
+      </a>
+      <a class="pill" href="../analizy.html" style="text-decoration:none">
+        <span class="dot" aria-hidden="true"></span>
+        <span>Каталог</span>
+      </a>
+    </div>
+  </div>
 </header>
 
 <main>
-<div class="container" style="max-width:920px">
-
-<div class="breadcrumbs">
-<a href="../index.html">Главная</a> ·
-<a href="../analizy.html">Каталог</a> ·
-Биохимия
-</div>
-
-<h1>Биохимия</h1>
-
-<p class="sub">
-Выберите анализ, чтобы открыть страницу и сравнить цены.
-</p>
-
-<div class="grid">
-
-<a class="item" href="glucose.html">
-<div class="item-title">Глюкоза</div>
-<div class="item-sub">Базовый показатель углеводного обмена.</div>
-</a>
-
-<a class="item" href="lipid.html">
-<div class="item-title">Липидный профиль</div>
-<div class="item-sub">Оценка уровня холестерина и риска атеросклероза.</div>
-</a>
-
-<a class="item" href="ferritin.html">
-<div class="item-title">Ферритин</div>
-<div class="item-sub">Показывает запасы железа в организме.</div>
-</a>
-
-</div>
-
-</div>
+  <div class="container" style="max-width:920px">
+    <div style="color:var(--muted); font-size:13px; margin:0 0 10px">
+      <a href="../index.html" style="text-decoration:none; color:inherit">Главная</a> ·
+      <a href="../analizy.html" style="text-decoration:none; color:inherit">Каталог</a> · Биохимия
+    </div>
+    <h1 style="margin:0 0 10px; letter-spacing:-1px">Биохимия</h1>
+    <p class="sub" style="margin:0 0 16px">Выберите анализ, чтобы открыть детальную страницу и сравнить цены в вашем городе.</p>
+    <div class="grid">
+      <a class="item" href="glucose.html"><div class="item-title">Глюкоза в плазме</div><div class="item-sub">Глюкоза в плазме — базовый показатель углеводного обмена.</div></a>
+      <a class="item" href="lipid.html"><div class="item-title">Липидный профиль</div><div class="item-sub">Липидный профиль помогает оценить риски атеросклероза по показателям холестерина и фракций.</div></a>
+      <a class="item" href="ferritin.html"><div class="item-title">Ферритин</div><div class="item-sub">Ферритин отражает запасы железа в организме и помогает оценить риск железодефицита.</div></a>
+    </div>
+  </div>
 </main>
 
-<footer class="footer-min">
-<a href="https://t.me/labradar">Telegram</a> ·
-<a href="../privacy.html">Правовая информация</a>
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-title">LabRadar</div>
+        <div>Категории анализов и сравнение цен.</div>
+      </div>
+      <div>
+        <div class="footer-title">Правовая информация</div>
+        <div><a href="../privacy.html">Политика конфиденциальности</a> · <a href="../terms.html">Пользовательское соглашение</a></div>
+      </div>
+    </div>
+  </div>
 </footer>
-
 </body>
 </html>
