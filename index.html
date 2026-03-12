@@ -1,77 +1,158 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>LabRadar — поиск и сравнение цен на анализы</title>
-  <meta name="description" content="Сравнение цен на лабораторные анализы в разных лабораториях города. Найдите где дешевле сдать анализы.">
-  <meta name="robots" content="index, follow">
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" href="favicon.ico" sizes="any">
-  <link rel="icon" type="image/png" href="favicon-32.png" sizes="32x32">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>LabRadar — сравнение цен на анализы</title>
+
+<meta name="description" content="Найдите где дешевле сдать анализы. Сравнение цен лабораторий в вашем городе." />
+
+<link rel="stylesheet" href="styles.css" />
+
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
 </head>
+
+
 <body>
+
+
 <header>
-  <div class="container">
-    <div class="hbar">
-      <a class="brand" href="index.html" aria-label="LabRadar">
-        <img src="logo.svg" alt="" width="34" height="34" />
-        <span>LabRadar</span>
-      </a>
+<div class="container">
 
-      <button class="pill" id="cityPill" type="button">
-        <span class="dot" aria-hidden="true"></span>
-        <span>Город: <b id="cityLabel">не выбран</b></span>
-      </button>
-    </div>
-  </div>
-</header>
+<div class="hbar">
 
-<main>
-  <div class="container" style="max-width:920px">
-    <section class="hero">
-      <h1 style="margin:0 0 10px; letter-spacing:-1px">Поиск и сравнение цен на анализы</h1>
-      <p class="sub" style="margin:0 0 18px">Выберите город и найдите, где выгоднее сдать анализы</p>
+<a class="brand" href="index.html">
+<img src="logo.svg" width="34" height="34" alt="">
+<span>LabRadar</span>
+</a>
 
-      <div class="search-wrap">
-        <div class="searchbox">
-          <input id="searchInput" type="search" placeholder="Например: ТТГ, ферритин, витамин D" autocomplete="off" />
-          <button class="btn-solid" id="searchBtn" type="button">Найти</button>
-        </div>
-        <div class="search-suggestions" id="suggestions"></div>
-      </div>
+<button class="pill" id="cityPill" type="button">
+<span class="dot"></span>
+<span>Город: <b id="cityLabel">—</b></span>
+</button>
 
-      <p class="small" style="margin:10px 0 0">Подсказка: напишите, например, клинический анализ крови или ТТГ.</p>
-    </section>
-  </div>
-</main>
-
-<footer class="footer-min">
-  <a href="analizy.html">Каталог анализов</a>
-  <span>·</span>
-  <a href="https://t.me/labradar" target="_blank" rel="noreferrer">Telegram</a>
-  <span>·</span>
-  <a href="legal.html">Правовая информация</a>
-</footer>
-
-<div class="backdrop" id="cityModal" role="dialog" aria-modal="true" aria-label="Выбор города">
-  <div class="modal">
-    <div class="modal-head">
-      <div class="modal-title">Выбор города</div>
-      <button class="icon-btn" id="closeCityModal" aria-label="Закрыть">✕</button>
-    </div>
-    <div class="modal-body">
-      <p class="small" style="margin:0 0 12px">Мы можем определить город автоматически. Это верно?</p>
-      <div class="row" style="gap:10px; flex-wrap:wrap">
-        <button class="btn-ghost" id="detectCityBtn" type="button">Определить автоматически</button>
-        <select class="select" id="citySelect" aria-label="Выберите город"></select>
-        <button class="btn-solid" id="saveCityBtn" type="button">Подтвердить</button>
-      </div>
-    </div>
-  </div>
 </div>
 
+</div>
+</header>
+
+
+<main>
+
+<div class="container" style="max-width:920px">
+
+
+<section class="hero">
+
+
+<h1 style="margin:0 0 10px; letter-spacing:-1px">
+Поиск и сравнение цен на анализы
+</h1>
+
+<p class="sub" style="margin:0 0 18px">
+Выберите город и найдите, где выгоднее сдать анализы
+</p>
+
+
+<div class="search-wrap">
+
+
+<div class="searchbox">
+
+<input
+id="searchInput"
+type="search"
+placeholder="Например: ТТГ, ферритин, витамин D"
+autocomplete="off"
+/>
+
+<button class="btn-solid" id="searchBtn" type="button">
+Найти
+</button>
+
+</div>
+
+
+<div class="search-suggestions" id="suggestions"></div>
+
+
+</div>
+
+
+<p class="small" style="margin-top:12px">
+Подсказка: напишите, например, клинический анализ крови или ТТГ.
+</p>
+
+
+</section>
+
+
+</div>
+
+</main>
+
+
+<footer class="footer-min">
+
+<a href="analizy.html">Каталог анализов</a>
+
+<span>·</span>
+
+<a href="https://t.me/labradar" target="_blank">Telegram</a>
+
+<span>·</span>
+
+<a href="legal.html">Правовая информация</a>
+
+</footer>
+
+
+
+<div class="backdrop" id="cityModal">
+
+<div class="modal">
+
+
+<div class="modal-head">
+
+<div class="modal-title">Выбор города</div>
+
+<button class="icon-btn" id="closeCityModal">✕</button>
+
+</div>
+
+
+<div class="modal-body">
+
+<p class="small" style="margin:0 0 12px">
+Выберите город для сравнения цен
+</p>
+
+<div class="row" style="gap:10px">
+
+<select class="select" id="citySelect"></select>
+
+<button class="btn-solid" id="saveCityBtn">
+Применить
+</button>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+
 <script src="app.js"></script>
+
+
 </body>
 </html>
