@@ -1,158 +1,288 @@
 <!doctype html>
 <html lang="ru">
 <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LabRadar — сравнение цен на анализы</title>
+  <meta name="description" content="Найдите где дешевле сдать анализы. Сравнение цен лабораторий в вашем городе." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="favicon-32.png" sizes="32x32">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    .hero{
+      min-height:auto;
+      padding:92px 0 120px;
+      text-align:center;
+    }
 
-<title>LabRadar — сравнение цен на анализы</title>
+    .hero-inner{
+      max-width:980px;
+      margin:0 auto;
+    }
 
-<meta name="description" content="Найдите где дешевле сдать анализы. Сравнение цен лабораторий в вашем городе." />
+    .hero-title{
+      margin:0 0 12px;
+      letter-spacing:-1px;
+      font-size:clamp(36px, 6vw, 60px);
+      line-height:1.05;
+    }
 
-<link rel="stylesheet" href="styles.css" />
+    .hero-sub{
+      margin:0 0 26px;
+      font-size:clamp(18px, 2vw, 22px);
+      color:var(--muted);
+    }
 
-<link rel="icon" href="favicon.ico" sizes="any">
-<link rel="icon" type="image/png" href="favicon-32.png" sizes="32x32">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+    .search-wrap{
+      position:relative;
+      max-width:980px;
+      margin:0 auto;
+    }
 
+    .searchbox{
+      display:grid;
+      grid-template-columns:1fr 170px;
+      gap:12px;
+      align-items:center;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:14px;
+      box-shadow:0 10px 28px rgba(11,31,30,.05);
+    }
+
+    .searchbox input{
+      width:100%;
+      border:0;
+      outline:none;
+      font-size:18px;
+      background:transparent;
+      padding:0 8px;
+      color:var(--text);
+    }
+
+    .searchbox input::placeholder{
+      color:#8e9898;
+    }
+
+    .searchbox .btn-solid{
+      width:100%;
+      min-width:auto;
+      border-radius:18px;
+      height:56px;
+      font-size:16px;
+      font-weight:900;
+    }
+
+    .search-suggestions{
+      position:absolute;
+      left:0;
+      right:0;
+      top:calc(100% + 8px);
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:0 14px 30px rgba(11,31,30,.08);
+      overflow:hidden;
+      z-index:20;
+      display:none;
+      text-align:left;
+    }
+
+    .search-suggestions.show{
+      display:block;
+    }
+
+    .suggest-item{
+      padding:12px 16px;
+      cursor:pointer;
+    }
+
+    .suggest-item:hover{
+      background:rgba(43,165,158,.06);
+    }
+
+    .quick-list{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:10px;
+      margin:16px 0 0;
+    }
+
+    .quick-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:10px 14px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:#fff;
+      color:var(--text);
+      text-decoration:none;
+      font-size:14px;
+      line-height:1;
+      cursor:pointer;
+      transition:.15s ease;
+    }
+
+    .quick-btn:hover{
+      border-color:rgba(43,165,158,.35);
+      box-shadow:0 8px 20px rgba(11,31,30,.06);
+      transform:translateY(-1px);
+    }
+
+    .hero-hint{
+      margin-top:14px;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .footer-min{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:12px;
+      text-align:center;
+      font-size:12px;
+      color:#9aa3a3;
+      z-index:2;
+      pointer-events:auto;
+    }
+
+    .footer-min a{
+      color:#9aa3a3;
+      text-decoration:none;
+      margin:0 6px;
+    }
+
+    .footer-min a:hover{
+      text-decoration:underline;
+    }
+
+    @media (max-width: 720px){
+      .hero{
+        padding:64px 0 110px;
+      }
+
+      .searchbox{
+        grid-template-columns:1fr;
+        gap:10px;
+        padding:12px;
+      }
+
+      .searchbox .btn-solid{
+        height:52px;
+      }
+
+      .quick-list{
+        justify-content:flex-start;
+      }
+    }
+  </style>
 </head>
-
-
 <body>
 
-
 <header>
-<div class="container">
+  <div class="container">
+    <div class="hbar">
+      <a class="brand" href="index.html" aria-label="LabRadar">
+        <img src="logo.svg" width="34" height="34" alt="">
+        <span>LabRadar</span>
+      </a>
 
-<div class="hbar">
-
-<a class="brand" href="index.html">
-<img src="logo.svg" width="34" height="34" alt="">
-<span>LabRadar</span>
-</a>
-
-<button class="pill" id="cityPill" type="button">
-<span class="dot"></span>
-<span>Город: <b id="cityLabel">—</b></span>
-</button>
-
-</div>
-
-</div>
+      <button class="pill" id="cityPill" type="button">
+        <span class="dot" aria-hidden="true"></span>
+        <span>Город: <b id="cityLabel">—</b></span>
+      </button>
+    </div>
+  </div>
 </header>
 
-
 <main>
+  <div class="container" style="max-width:1100px">
+    <section class="hero">
+      <div class="hero-inner">
+        <h1 class="hero-title">Поиск и сравнение цен на анализы</h1>
+        <p class="hero-sub">Выберите город и найдите, где выгоднее сдать анализы</p>
 
-<div class="container" style="max-width:920px">
+        <div class="search-wrap">
+          <div class="searchbox">
+            <input
+              id="searchInput"
+              type="search"
+              placeholder="Например: ТТГ, ферритин, витамин D"
+              autocomplete="off"
+            />
+            <button class="btn-solid" id="searchBtn" type="button">Найти</button>
+          </div>
 
+          <div class="search-suggestions" id="suggestions"></div>
+        </div>
 
-<section class="hero">
+        <div class="quick-list">
+          <button class="quick-btn" type="button" data-quick-search="ТТГ">ТТГ</button>
+          <button class="quick-btn" type="button" data-quick-search="Ферритин">Ферритин</button>
+          <button class="quick-btn" type="button" data-quick-search="Витамин D (25(OH)D)">Витамин D</button>
+          <button class="quick-btn" type="button" data-quick-search="Глюкоза в плазме">Глюкоза</button>
+          <button class="quick-btn" type="button" data-quick-search="Клинический анализ крови (ОАК)">ОАК</button>
+          <button class="quick-btn" type="button" data-quick-search="Липидный профиль">Липидный профиль</button>
+        </div>
 
-
-<h1 style="margin:0 0 10px; letter-spacing:-1px">
-Поиск и сравнение цен на анализы
-</h1>
-
-<p class="sub" style="margin:0 0 18px">
-Выберите город и найдите, где выгоднее сдать анализы
-</p>
-
-
-<div class="search-wrap">
-
-
-<div class="searchbox">
-
-<input
-id="searchInput"
-type="search"
-placeholder="Например: ТТГ, ферритин, витамин D"
-autocomplete="off"
-/>
-
-<button class="btn-solid" id="searchBtn" type="button">
-Найти
-</button>
-
-</div>
-
-
-<div class="search-suggestions" id="suggestions"></div>
-
-
-</div>
-
-
-<p class="small" style="margin-top:12px">
-Подсказка: напишите, например, клинический анализ крови или ТТГ.
-</p>
-
-
-</section>
-
-
-</div>
-
+        <p class="hero-hint">
+          Подсказка: напишите, например, клинический анализ крови или ТТГ.
+        </p>
+      </div>
+    </section>
+  </div>
 </main>
 
-
 <footer class="footer-min">
-
-<a href="analizy.html">Каталог анализов</a>
-
-<span>·</span>
-
-<a href="https://t.me/labradar" target="_blank">Telegram</a>
-
-<span>·</span>
-
-<a href="legal.html">Правовая информация</a>
-
+  <a href="analizy.html">Каталог анализов</a>
+  <span>·</span>
+  <a href="https://t.me/labradar" target="_blank" rel="noreferrer">Telegram</a>
+  <span>·</span>
+  <a href="legal.html">Правовая информация</a>
 </footer>
 
-
-
 <div class="backdrop" id="cityModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">Выбор города</div>
+      <button class="icon-btn" id="closeCityModal" type="button">✕</button>
+    </div>
 
-<div class="modal">
+    <div class="modal-body">
+      <p class="small" style="margin:0 0 12px">
+        Выберите город для сравнения цен
+      </p>
 
-
-<div class="modal-head">
-
-<div class="modal-title">Выбор города</div>
-
-<button class="icon-btn" id="closeCityModal">✕</button>
-
+      <div class="row" style="gap:10px">
+        <select class="select" id="citySelect"></select>
+        <button class="btn-solid" id="saveCityBtn" type="button">Применить</button>
+      </div>
+    </div>
+  </div>
 </div>
-
-
-<div class="modal-body">
-
-<p class="small" style="margin:0 0 12px">
-Выберите город для сравнения цен
-</p>
-
-<div class="row" style="gap:10px">
-
-<select class="select" id="citySelect"></select>
-
-<button class="btn-solid" id="saveCityBtn">
-Применить
-</button>
-
-</div>
-
-</div>
-
-
-</div>
-
-</div>
-
 
 <script src="app.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(){
+    const input = document.getElementById("searchInput");
+    const btn = document.getElementById("searchBtn");
 
+    document.querySelectorAll("[data-quick-search]").forEach(el => {
+      el.addEventListener("click", function(){
+        const value = this.getAttribute("data-quick-search") || "";
+        if(input) input.value = value;
+        if(btn) btn.click();
+      });
+    });
+  });
+</script>
 
 </body>
 </html>
