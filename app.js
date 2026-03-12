@@ -701,3 +701,15 @@ function drawChart(data, city, testId) {
     }
   });
 }
+document.addEventListener("DOMContentLoaded", function(){
+  const input = document.getElementById("searchInput");
+  const btn = document.getElementById("searchBtn");
+
+  document.querySelectorAll("[data-quick-search]").forEach(el => {
+    el.addEventListener("click", function(){
+      const value = this.getAttribute("data-quick-search") || "";
+      if(input) input.value = value;
+      if(btn) btn.click();
+    });
+  });
+});
