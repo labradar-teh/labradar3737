@@ -196,12 +196,42 @@ function showToast(title, text) {
       return;
     }
 
-    let currentCity = store.getCity();
-    if (!currentCity && data.cities?.length) {
-      currentCity = data.cities[0];
-      store.setCity(currentCity);
-    }
-    if (cityLabel) cityLabel.textContent = currentCity || "не выбран";
+let currentCity = store.getCity();
+
+function detectCityByTimezone() {
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+    const map = {
+      "Europe/Moscow": "Москва",
+      "Europe/Samara": "Самара",
+      "Europe/Volgograd": "Волгоград",
+      "Europe/Kirov": "Киров",
+      "Europe/Astrakhan": "Астрахань",
+      "Asia/Yekaterinburg": "Екатеринбург",
+      "Asia/Omsk": "Омск",
+      "Asia/Krasnoyarsk": "Красноярск",
+      "Asia/Irkutsk": "Иркутск",
+      "Asia/Yakutsk": "Якутск",
+      "Asia/Vladivostok": "Владивосток",
+      "Asia/Novosibirsk": "Новосибирск"
+    };
+    return map[tz] || "";
+  } catch(e) {
+    return "";
+  }
+}
+
+if (!currentCity) {
+  const detected = detectCityByTimezone();
+  if (detected && data.cities?.includes(detected)) {
+    currentCity = detected;
+  } else if (data.cities?.length) {
+    currentCity = data.cities[0];
+  }
+  if (currentCity) store.setCity(currentCity);
+}
+
+if (cityLabel) cityLabel.textContent = currentCity || "не выбран";
 
     if (citySelect && data.cities) {
       citySelect.innerHTML = data.cities
