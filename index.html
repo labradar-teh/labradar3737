@@ -1,17 +1,15 @@
-
 <!doctype html>
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>LabRadar — поиск и сравнение цен на анализы</title>
-  <meta name="description" content="LabRadar — поиск и сравнение цен на популярные анализы по лабораториям и регионам." />
+  <meta name="description" content="Сравнение цен на лабораторные анализы в разных лабораториях города. Найдите где дешевле сдать анализы.">
+  <meta name="robots" content="index, follow">
   <link rel="stylesheet" href="styles.css" />
-
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" href="favicon-32.png" sizes="32x32">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-
 </head>
 <body>
 <header>
@@ -24,47 +22,39 @@
 
       <button class="pill" id="cityPill" type="button">
         <span class="dot" aria-hidden="true"></span>
-        <span id="cityLabel">Город: не выбран</span>
+        <span>Город: <b id="cityLabel">не выбран</b></span>
       </button>
     </div>
   </div>
 </header>
 
 <main>
-  <div class="container">
+  <div class="container" style="max-width:920px">
     <section class="hero">
-      <h1>Поиск и сравнение цен на анализы</h1>
-      <p class="sub">Выберите город и найдите, где выгоднее сдать анализы</p>
+      <h1 style="margin:0 0 10px; letter-spacing:-1px">Поиск и сравнение цен на анализы</h1>
+      <p class="sub" style="margin:0 0 18px">Выберите город и найдите, где выгоднее сдать анализы</p>
 
-      <div class="card">
-        <div class="search-row">
-          <div class="input">
-            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="currentColor" d="M10 18a8 8 0 1 1 0-16a8 8 0 0 1 0 16m11 3l-6-6" opacity=".9"/>
-            </svg>
-            <input id="q" type="search" placeholder="Введите анализ или услугу" autocomplete="off" />
-          </div>
-          <button class="btn" id="searchBtn" type="button">Найти</button>
+      <div class="search-wrap">
+        <div class="searchbox">
+          <input id="searchInput" type="search" placeholder="Например: ТТГ, ферритин, витамин D" autocomplete="off" />
+          <button class="btn-solid" id="searchBtn" type="button">Найти</button>
         </div>
-
-        <div class="hint">Подсказка: напишите, например, <b>клинический анализ крови</b> или <b>ТТГ</b>.</div>
-        <div class="suggestions" id="suggestions" aria-label="Подсказки поиска"></div>
+        <div class="search-suggestions" id="suggestions"></div>
       </div>
+
+      <p class="small" style="margin:10px 0 0">Подсказка: напишите, например, клинический анализ крови или ТТГ.</p>
     </section>
   </div>
 </main>
 
 <footer class="footer-min">
-  <div class="footer-links">
-    <a href="analizy.html">Каталог анализов</a>
-    <span>·</span>
-    <a href="https://t.me/labradar" target="_blank">Telegram</a>
-    <span>·</span>
-    <a href="legal.html">Правовая информация</a>
-  </div>
+  <a href="analizy.html">Каталог анализов</a>
+  <span>·</span>
+  <a href="https://t.me/labradar" target="_blank" rel="noreferrer">Telegram</a>
+  <span>·</span>
+  <a href="legal.html">Правовая информация</a>
 </footer>
 
-<!-- City modal -->
 <div class="backdrop" id="cityModal" role="dialog" aria-modal="true" aria-label="Выбор города">
   <div class="modal">
     <div class="modal-head">
@@ -72,127 +62,16 @@
       <button class="icon-btn" id="closeCityModal" aria-label="Закрыть">✕</button>
     </div>
     <div class="modal-body">
-      <p id="geoText">Мы можем определить город автоматически. Это верно?</p>
-      <select class="select" id="citySelect"></select>
-      <div class="modal-actions">
-        <button class="btn-ghost" id="tryGeo" type="button">Определить автоматически</button>
-        <button class="btn-solid" id="saveCity" type="button">Подтвердить</button>
+      <p class="small" style="margin:0 0 12px">Мы можем определить город автоматически. Это верно?</p>
+      <div class="row" style="gap:10px; flex-wrap:wrap">
+        <button class="btn-ghost" id="detectCityBtn" type="button">Определить автоматически</button>
+        <select class="select" id="citySelect" aria-label="Выберите город"></select>
+        <button class="btn-solid" id="saveCityBtn" type="button">Подтвердить</button>
       </div>
     </div>
   </div>
 </div>
 
 <script src="app.js"></script>
-<script>
-(async function(){
-  const data = await LabRadar.loadData();
-
-  const cityLabel = document.getElementById("cityLabel");
-  const cityPill = document.getElementById("cityPill");
-  const cityModal = document.getElementById("cityModal");
-  const closeCityModal = document.getElementById("closeCityModal");
-  const citySelect = document.getElementById("citySelect");
-  const saveCity = document.getElementById("saveCity");
-  const tryGeo = document.getElementById("tryGeo");
-  const geoText = document.getElementById("geoText");
-
-  function setCityUI(){
-    const c = LabRadar.store.getCity();
-    cityLabel.textContent = c ? ("Город: " + c) : "Город: не выбран";
-    if(c){
-      citySelect.value = c;
-      geoText.textContent = `Сейчас выбран город: ${c}. Всё верно?`;
-    } else {
-      geoText.textContent = "Мы можем определить город автоматически. Это верно?";
-    }
-  }
-
-  // Fill select
-  citySelect.innerHTML = '<option value="">— выберите город —</option>' + (data.cities||[]).map(c => `<option value="${LabRadar.escapeHtml(c)}">${LabRadar.escapeHtml(c)}</option>`).join("");
-
-  function openCityModal(){ cityModal.classList.add("show"); setCityUI(); }
-  function closeModal(){ cityModal.classList.remove("show"); }
-
-  cityPill.addEventListener("click", openCityModal);
-  closeCityModal.addEventListener("click", closeModal);
-  cityModal.addEventListener("click", (e)=>{ if(e.target === cityModal) closeModal(); });
-
-  saveCity.addEventListener("click", ()=>{
-    const selected = citySelect.value;
-    if(selected) LabRadar.store.setCity(selected);
-    setCityUI();
-    closeModal();
-  });
-
-  // Geo stub: without geocoding we just confirm existing or default first city
-  tryGeo.addEventListener("click", ()=>{
-    if(!navigator.geolocation){
-      geoText.textContent = "Геолокация недоступна. Выберите город вручную.";
-      return;
-    }
-    geoText.textContent = "Запрашиваем геолокацию…";
-    navigator.geolocation.getCurrentPosition(
-      ()=>{
-        const guess = LabRadar.store.getCity() || (data.cities && data.cities[0]) || "";
-        if(guess) LabRadar.store.setCity(guess);
-        geoText.textContent = `Ок. Предположительно: ${guess}. Всё верно? (можно изменить ниже)`;
-        setCityUI();
-      },
-      ()=>{ geoText.textContent = "Не удалось определить автоматически. Выберите город вручную."; },
-      { enableHighAccuracy:false, timeout:7000, maximumAge:600000 }
-    );
-  });
-
-  // Search + suggestions
-  const q = document.getElementById("q");
-  const suggestionsBox = document.getElementById("suggestions");
-  const searchBtn = document.getElementById("searchBtn");
-
-  function renderSuggestions(items){
-    if(!items.length){
-      suggestionsBox.classList.remove("show");
-      suggestionsBox.innerHTML = "";
-      return;
-    }
-    suggestionsBox.classList.add("show");
-    suggestionsBox.innerHTML = items.map(it => `
-      <button type="button" data-id="${LabRadar.escapeHtml(it.id)}" data-title="${LabRadar.escapeHtml(it.title)}">
-        <span>${LabRadar.escapeHtml(it.title)}</span>
-        <span class="meta">${LabRadar.escapeHtml(it.meta)}</span>
-      </button>
-    `).join("");
-  }
-
-  q.addEventListener("input", ()=>{
-    const v = q.value.trim();
-    if(v.length < 2){ renderSuggestions([]); return; }
-    renderSuggestions(LabRadar.getSuggestions(data, v));
-  });
-
-  suggestionsBox.addEventListener("click", (e)=>{
-    const btn = e.target.closest("button");
-    if(!btn) return;
-    q.value = btn.dataset.title;
-    renderSuggestions([]);
-    q.focus();
-  });
-
-  function doSearch(){
-    const query = q.value.trim();
-    if(!query) return;
-    const city = LabRadar.store.getCity();
-    if(!city){ openCityModal(); return; }
-    window.location.href = `search.html?city=${encodeURIComponent(city)}&q=${encodeURIComponent(query)}`;
-  }
-
-  searchBtn.addEventListener("click", doSearch);
-  q.addEventListener("keydown", (e)=>{ if(e.key === "Enter") doSearch(); });
-
-  // Init city label
-  setCityUI();
-  // If no city yet, gently open modal
-  if(!LabRadar.store.getCity()) openCityModal();
-})();
-</script>
 </body>
 </html>
