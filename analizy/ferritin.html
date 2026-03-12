@@ -22,28 +22,70 @@
   </style>
 </head>
 <body>
-<header><div class="container"><div class="hbar"><a class="brand" href="../index.html" aria-label="LabRadar"><img src="../logo.svg" alt="" width="34" height="34" /><span>LabRadar</span></a><a class="pill" href="../analizy.html" style="text-decoration:none"><span class="dot" aria-hidden="true"></span><span>Каталог</span></a></div></div></header>
+<header>
+  <div class="container">
+    <div class="hbar">
+      <a class="brand" href="../index.html" aria-label="LabRadar">
+        <img src="../logo.svg" alt="" width="34" height="34" />
+        <span>LabRadar</span>
+      </a>
+      <a class="pill" href="../analizy.html" style="text-decoration:none">
+        <span class="dot" aria-hidden="true"></span>
+        <span>Каталог</span>
+      </a>
+    </div>
+  </div>
+</header>
 
 <main>
   <div class="container" style="max-width:920px">
-    <div class="crumbs"><a href="../index.html">Главная</a> · <a href="../analizy.html">Каталог анализов</a> · Биохимия · Ферритин</div>
+    <div class="crumbs">
+      <a href="../index.html">Главная</a> ·
+      <a href="../analizy.html">Каталог анализов</a> ·
+      Биохимия ·
+      Ферритин
+    </div>
+
     <h1 style="margin:0 0 10px; letter-spacing:-1px">Ферритин</h1>
     <p class="sub" style="margin:0 0 16px">Ферритин отражает запасы железа в организме и помогает оценить риск железодефицита.</p>
 
     <div class="two">
       <div class="panel">
         <h3 style="margin:0 0 10px">Сравнение цен</h3>
-        <p class="smallp" style="margin-bottom:12px">Город: <select id="cityInline" class="select" style="padding:8px 10px; border-radius:12px"></select></p>
+        <p class="smallp" style="margin-bottom:12px">
+          Город:
+          <select id="cityInline" class="select" style="padding:8px 10px; border-radius:12px"></select>
+        </p>
+
         <div id="kpis" class="kpis" style="margin:0 0 12px"></div>
-        <table class="table"><thead><tr><th>Лаборатория</th><th>Цена</th><th>Адрес</th></tr></thead><tbody id="tbody"></tbody></table>
-        <div class="small" style="margin-top:10px"><a class="link" id="openSearch" href="#">Открыть в поиске</a> <button class="btn-ghost" id="shareBtn" type="button">Поделиться</button></div>
+
+        <table class="table" aria-label="Цены по лабораториям">
+          <thead>
+            <tr><th>Лаборатория</th><th>Цена</th><th>Адрес</th></tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+
+        <div class="small" style="margin-top:10px">
+          <a class="link" id="openSearch" href="#">Открыть в поиске</a>
+          <button class="btn-ghost" id="shareBtn" type="button">Поделиться</button>
+        </div>
       </div>
 
       <div class="panel">
         <h3>Подготовка</h3>
-        <ul class="list"><li>Если назначил врач — следуйте его рекомендациям.</li><li>Часто анализы сдают утром; можно пить воду.</li><li>Точные правила зависят от исследования и метода.</li></ul>
+        <ul class="list">
+          <li>Если назначил врач — следуйте его рекомендациям.</li>
+          <li>Часто анализы сдают утром; можно пить воду.</li>
+          <li>Точные правила зависят от исследования и метода.</li>
+        </ul>
+
         <h3 style="margin-top:14px">Когда назначают</h3>
-        <ul class="list"><li>При профилактическом обследовании.</li><li>При жалобах и симптомах по назначению врача.</li></ul>
+        <ul class="list">
+          <li>При профилактическом обследовании.</li>
+          <li>При жалобах и симптомах по назначению врача.</li>
+        </ul>
+
         <h3 style="margin-top:14px">Важно</h3>
         <p class="smallp">Информация на странице носит справочный характер и не заменяет консультацию специалиста.</p>
       </div>
@@ -51,44 +93,99 @@
   </div>
 </main>
 
-<footer><div class="container"><div class="footer-inner"><div><div class="footer-title">LabRadar</div><div>Описание анализа и сравнение цен.</div></div><div><div class="footer-title">Правовая информация</div><div><a href="../privacy.html">Политика конфиденциальности</a> · <a href="../terms.html">Пользовательское соглашение</a></div></div></div></div></footer>
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-title">LabRadar</div>
+        <div>Описание анализа и сравнение цен.</div>
+      </div>
+      <div>
+        <div class="footer-title">Правовая информация</div>
+        <div><a href="../privacy.html">Политика конфиденциальности</a> · <a href="../terms.html">Пользовательское соглашение</a></div>
+      </div>
+    </div>
+  </div>
+</footer>
 
 <script src="../app.js"></script>
 <script>
 (async function(){
   const data = await LabRadar.loadData();
   const testId = "ferritin";
-  let city = LabRadar.store.getCity() || ((data.cities||[])[0] || "");
-  if(!LabRadar.store.getCity() && city) LabRadar.store.setCity(city);
+  let city = LabRadar.store.getCity() || ((data.cities || [])[0] || "");
+  if (!LabRadar.store.getCity() && city) LabRadar.store.setCity(city);
+
   const cityInline = document.getElementById("cityInline");
   const openSearch = document.getElementById("openSearch");
   const kpis = document.getElementById("kpis");
   const tbody = document.getElementById("tbody");
+  const shareBtn = document.getElementById("shareBtn");
 
-  function setCityUI(){ cityInline.innerHTML = (data.cities||[]).map(c=>`<option value="${LabRadar.escapeHtml(c)}">${LabRadar.escapeHtml(c)}</option>`).join(""); if(city) cityInline.value = city; }
+  function setCityUI(){
+    cityInline.innerHTML = (data.cities || [])
+      .map(c => `<option value="${LabRadar.escapeHtml(c)}">${LabRadar.escapeHtml(c)}</option>`)
+      .join("");
+    if(city) cityInline.value = city;
+  }
+
   function renderPrices(){
     const rows = city ? LabRadar.buildRows(data, city, testId) : [];
     const stats = LabRadar.computeStats(rows);
-    kpis.innerHTML = `<div class="kpi"><div class="label">Самая низкая цена</div><div class="value">${LabRadar.formatRUB(stats.min)}</div></div><div class="kpi"><div class="label">Средняя цена</div><div class="value">${LabRadar.formatRUB(stats.avg)}</div></div><div class="kpi"><div class="label">Разница</div><div class="value">${stats.min!=null && stats.max!=null ? LabRadar.formatRUB(stats.max - stats.min) : "—"}</div></div>`;
+
+    kpis.innerHTML = `
+      <div class="kpi"><div class="label">Самая низкая цена</div><div class="value">${LabRadar.formatRUB(stats.min)}</div></div>
+      <div class="kpi"><div class="label">Средняя цена</div><div class="value">${LabRadar.formatRUB(stats.avg)}</div></div>
+      <div class="kpi"><div class="label">Разница</div><div class="value">${stats.min != null && stats.max != null ? LabRadar.formatRUB(stats.max - stats.min) : "—"}</div></div>
+    `;
+
     const minPrice = stats.min;
-    tbody.innerHTML = rows.length ? rows.sort((a,b)=>(a.price??1e18)-(b.price??1e18)).map(r => {
-      const addr = (r.locations && r.locations[0]) ? r.locations[0].address : "—";
-      const badge = (minPrice!=null && r.price===minPrice) ? ' <span class="badge">самая низкая</span>' : '';
-      return `<tr><td><div style="font-weight:900">${LabRadar.escapeHtml(r.labName)}</div></td><td class="price">${LabRadar.formatRUB(r.price)}${badge}</td><td class="small">${LabRadar.escapeHtml(addr)}</td></tr>`;
-    }).join("") : `<tr><td colspan="3" class="small">По этому анализу пока нет данных в выбранном городе.</td></tr>`;
+
+    tbody.innerHTML = rows.length
+      ? rows.sort((a, b) => (a.price ?? 1e18) - (b.price ?? 1e18)).map(r => {
+          const addr = (r.locations && r.locations[0]) ? r.locations[0].address : "—";
+          const badge = (minPrice != null && r.price === minPrice)
+            ? ' <span class="badge">самая низкая</span>'
+            : '';
+          return `
+            <tr>
+              <td><div style="font-weight:900">${LabRadar.escapeHtml(r.labName)}</div></td>
+              <td class="price">${LabRadar.formatRUB(r.price)}${badge}</td>
+              <td class="small">${LabRadar.escapeHtml(addr)}</td>
+            </tr>
+          `;
+        }).join("")
+      : `<tr><td colspan="3" class="small">По этому анализу пока нет данных в выбранном городе.</td></tr>`;
+
     openSearch.href = `../search.html?city=${encodeURIComponent(city)}&test=${encodeURIComponent(testId)}&q=${encodeURIComponent("Ферритин")}`;
   }
 
   setCityUI();
   renderPrices();
-  cityInline.addEventListener("change", ()=>{ const selected = cityInline.value; if(!selected) return; city = selected; LabRadar.store.setCity(city); renderPrices(); });
 
-  const shareBtn = document.getElementById("shareBtn");
-  if(shareBtn) shareBtn.addEventListener("click", async ()=>{
-    const url = window.location.href;
-    try{ await navigator.clipboard.writeText(url); }
-    catch(e){ const ta=document.createElement("textarea"); ta.value=url; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta); }
+  cityInline.addEventListener("change", ()=>{
+    const selected = cityInline.value;
+    if(!selected) return;
+    city = selected;
+    LabRadar.store.setCity(city);
+    renderPrices();
   });
+
+  if(shareBtn){
+    shareBtn.addEventListener("click", async ()=>{
+      const url = window.location.href;
+      try{
+        await navigator.clipboard.writeText(url);
+      }catch(e){
+        const ta = document.createElement("textarea");
+        ta.value = url;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+      }
+    });
+  }
 })();
 </script>
 </body>
